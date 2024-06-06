@@ -11,5 +11,7 @@ namespace Models
         public Position Position { get; set; }
         public Decimal ComissionValue { get; set; } // Porcentagem
         public Decimal Comission { get; set; } //
+        public Employee employee { get; set; } //
+
     }
 }
