@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,33 +9,22 @@ namespace Models
 {
     public class Client : Person
     {
+        public static readonly string SELECT = "SELECT p.Document, p.Name, p.BirthDate, p.Phone, p.Email, c.Income, a.Id, a.Street, a.ZipCode, a.Complement, a.State,a.Neighborhood, a.City,a.Number FROM Client c INNER JOIN Person p on c.Document = p.Document INNER JOIN Adress a on a.Id = p.AdressId";
+                    
         public Decimal Income { get; set; }
-        //public Client(Decimal income, string pdf, string cpf, string name, DateTime bd, string phone, string email, string street, string zipcode, string complement, string state,string neighborhood, string city, string number)
-        //{
-        //    this.Income = income;
-        //    this.Document = cpf;
-        //    this.Name = name;
-        //    this.BirthDate = bd;
-        //    this.Phone = phone;
-        //    this.Email = email;
-        //    this.Adress = new Adress
-        //    {
-        //        Street = street,
-        //        ZipCode = zipcode,
-        //        Complement = complement,
-        //        State = state,
-        //        Neighborhood = neighborhood,
-        //        City = city,
-        //        Number = number
-        //    };
-        //    //this.Adress.Id = idAdress;
-        //    //    this.Adress.Street = street;
-        //    //    this.Adress.ZipCode = zipcode;
-        //    //    this.Adress.Complement = complement;
-        //    //    this.Adress.State = state;
-        //    //    this.Adress.City = city;
-        //    //    this.Adress.Number = number;
-        //    //}
-        //}
+
+        public Client()
+        {
+            
+        }
+        public Client(ClientDTO clientDTO)
+        {
+            this.Document = clientDTO.DocumentDTO;
+            this.Name = clientDTO.Name;
+            this.BirthDate = clientDTO.BirthDate;
+            this.Phone = clientDTO.Phone;
+            this.Email = clientDTO.Email;
+            this.Income = clientDTO.IncomeDTO;
+        }
     }
 }

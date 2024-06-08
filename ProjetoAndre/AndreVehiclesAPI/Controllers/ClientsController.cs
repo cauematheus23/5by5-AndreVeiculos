@@ -33,14 +33,14 @@ namespace AndreVehiclesAPI.Controllers
         }
 
         // GET: api/Clients/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Client>> GetClient(string id)
+        [HttpGet("{document}")]
+        public async Task<ActionResult<Client>> GetClient(string document)
         {
           if (_context.Client == null)
           {
               return NotFound();
           }
-            var client = await _context.Client.FindAsync(id);
+            var client = await _context.Client.FindAsync(document);
 
             if (client == null)
             {
@@ -52,7 +52,7 @@ namespace AndreVehiclesAPI.Controllers
 
         // PUT: api/Clients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{document}")]
         public async Task<IActionResult> PutClient(string id, Client client)
         {
             if (id != client.Document)

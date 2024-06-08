@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AndreVehiclesAPI.Data;
 using Models;
+using Models.DTO;
 
 namespace AndreVehiclesAPI.Controllers
 {
@@ -84,8 +85,13 @@ namespace AndreVehiclesAPI.Controllers
         // POST: api/Payments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Payment>> PostPayment(Payment payment)
+        public async Task<ActionResult<Payment>> PostPayment(PaymentDTO DTO)
         {
+            Payment payment = new Payment(DTO);
+            payment.Pix = _context.Pix.Find(DTO.PixId);
+            payment.Card = _context.Card.Find(DTO.CreditCard);
+            payment.Boleto = _context.Boleto.Find(DTO.BoletoId);
+            _context.Payment.Add(payment);
           if (_context.Payment == null)
           {
               return Problem("Entity set 'AndreVehiclesAPIContext.Payment'  is null.");
