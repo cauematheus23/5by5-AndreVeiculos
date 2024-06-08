@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AndreVehiclesAPI.Data;
 using Models;
+using Models.DTO;
+using Humanizer;
 
 namespace AndreVehiclesAPI.Controllers
 {
@@ -29,18 +31,18 @@ namespace AndreVehiclesAPI.Controllers
           {
               return NotFound();
           }
-            return await _context.Employee.ToListAsync();
+            return await _context.Employee.Include(a => a.Adress).Include(p => p.Position).ToListAsync();
         }
 
         // GET: api/Employees/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Employee>> GetEmployee(string id)
+        [HttpGet("{document}")]
+        public async Task<ActionResult<Employee>> GetEmployee(string document)
         {
           if (_context.Employee == null)
           {
               return NotFound();
           }
-            var employee = await _context.Employee.FindAsync(id);
+            var employee = await _context.Employee.Include(a => a.Adress).Include(p => p.Position).Where(e => e.Document == document).SingleOrDefaultAsync(e => e.Document == document);
 
             if (employee == null)
             {
@@ -52,10 +54,14 @@ namespace AndreVehiclesAPI.Controllers
 
         // PUT: api/Employees/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmployee(string id, Employee employee)
+        [HttpPut("{document}")]
+        public async Task<IActionResult> PutEmployee(string document, EmployeeDTO DTO)
         {
-            if (id != employee.Document)
+            Employee employee = new Employee(DTO);
+            employee.Document = DTO.Document;
+            employee.Position = await _context.Position.FindAsync(employee.Position.Id);
+            _context.Employee.Add(employee);
+            if (document != employee.Document)
             {
                 return BadRequest();
             }
@@ -68,7 +74,7 @@ namespace AndreVehiclesAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EmployeeExists(id))
+                if (!EmployeeExists(document))
                 {
                     return NotFound();
                 }
@@ -84,8 +90,14 @@ namespace AndreVehiclesAPI.Controllers
         // POST: api/Employees
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployee(Employee employee)
+        public async Task<ActionResult<Employee>> PostEmployee(EmployeeDTO DTO)
         {
+            Employee employee = new Employee(DTO);
+            employee.Document = DTO.Document;
+            employee.Position = await _context.Position.FindAsync(employee.Position.Id);
+            _context.Employee.Add(employee);
+
+            
           if (_context.Employee == null)
           {
               return Problem("Entity set 'AndreVehiclesAPIContext.Employee'  is null.");
