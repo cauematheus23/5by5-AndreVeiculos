@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +14,17 @@ namespace Models
         public Car Car { get; set; }    
         public Job Job { get; set; }
         public bool Status { get; set; }
+        public CarJob()
+        {
+        }
+        public CarJob(CarJobDTO cjdto)
+        {
+            Car car = new Car { Plate = cjdto.CarPlate};
+            Job job = new Job { Id = cjdto.JobId};
+            this.Car = car;
+            this.Job = job;
+            this.Status = cjdto.Status;
+        }
 
         public override string? ToString() => $"\n{Car}\nServiço {Job}\nStatus: {Status}";
     }
